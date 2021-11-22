@@ -11,6 +11,35 @@ It includes auth and connection functionality from [`home-assistant-js-websocket
 - [ ] Service helpers
 - [ ] Config helpers
 
+# Getting Started
+
+1. Clone this repository
+
+```shell
+$ git clone https://github.com/dangreco/home-assistant-nextjs-starter 
+```
+
+2. Install dependencies
+```shell
+$ yarn
+```
+
+3. Edit `utils/config.ts` with the name of your app:
+```tsx
+const APP_NAME = 'app-name'; // <- Edit this!
+
+export {
+  APP_NAME,
+}
+```
+
+4. Start the dev server
+```shell
+$ yarn dev
+```
+
+5. Open up `localhost:3000` in your browser, you're done!
+
 # Hooks
 
 ## Entities
