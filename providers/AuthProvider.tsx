@@ -42,7 +42,6 @@ const AuthWrapper: React.FunctionComponent = ({ children }) => {
       });
       setAuth(_auth);
     } catch (err) {
-
     }
   }
 
@@ -55,8 +54,8 @@ const AuthWrapper: React.FunctionComponent = ({ children }) => {
   }
 
   useEffect(() => {
-    if (!auth) _getAuth();
-  }, [router]);
+    if (!auth || !auth.accessToken) _getAuth();
+  }, [router, auth]);
 
 
   return (
