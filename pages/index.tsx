@@ -36,7 +36,7 @@ const Home: React.FunctionComponent = () => {;
       <p>
         # of Found Entities:
         { ' ' }
-        { results.length }
+        { Object.keys(results).length }
       </p>
 
       <pre>

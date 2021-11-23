@@ -13,12 +13,12 @@ const SearchProvider: React.FunctionComponent = ({
   const fuse = useRef<Fuse<any> | undefined>(
     new Fuse(
       [], 
-      { 
-        includeScore: true, 
+      {
         keys: [
           'entity_id', 
           'friendly_name'
-        ]
+        ],
+        threshold: 0.2,
       }
     )
   );
