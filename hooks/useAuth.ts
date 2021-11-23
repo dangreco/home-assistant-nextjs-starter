@@ -4,7 +4,6 @@ import AuthContext from "../contexts/AuthContext";
 const useAuth = () => {
   const { 
     auth,
-    refresh,
     connect, 
     logout,
   } = useContext(AuthContext);
@@ -12,7 +11,6 @@ const useAuth = () => {
   return {
     auth,
     connect,
-    refresh,
     logout,
   };
 };

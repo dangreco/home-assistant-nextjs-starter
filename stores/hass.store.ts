@@ -14,7 +14,7 @@ interface HassStore {
 }
 
 const useHassStore = create<HassStore>(
-  (get, set) => ({
+  () => ({
     entities: {},
     services: {},
     config: {},

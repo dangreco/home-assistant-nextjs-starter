@@ -1,13 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Auth,
-  Connection,
-  createConnection,
+  ERR_CANNOT_CONNECT,
+  ERR_CONNECTION_LOST,
   ERR_HASS_HOST_REQUIRED,
   ERR_INVALID_AUTH,
+  ERR_INVALID_HTTPS_TO_HTTP,
   getAuth,
 } from "home-assistant-js-websocket";
 import { useRouter } from "next/dist/client/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AuthContext from "../contexts/AuthContext";
 import useAuthStore from "../stores/auth.store";
 import useHassStore from "../stores/hass.store";
@@ -15,7 +17,12 @@ import { HomeAssistantInstance } from "../types";
 
 const AuthWrapper: React.FunctionComponent = ({ children }) => {
   const router = useRouter();
-  const [auth, setAuth] = useState<Auth | undefined>();
+  const {
+    saveAuthData,
+    loadAuthData,
+  } = useAuthStore();
+  const auth = useRef<Auth | undefined>();
+  const [loading, setLoading] = useState(false);
 
   const connect = async (
     instance: HomeAssistantInstance,
@@ -29,40 +36,62 @@ const AuthWrapper: React.FunctionComponent = ({ children }) => {
     return await getAuth({
       hassUrl: preferExternal 
         ? externalUrl || internalUrl
-        : internalUrl,
-      saveTokens: useAuthStore.setState,
+        : internalUrl
     })
   }
 
-  const _getAuth = async () => {
-    try {
-      const _auth = await getAuth({
-        saveTokens: useAuthStore.setState,
-        loadTokens: async () => useAuthStore.getState(),
-      });
-      setAuth(_auth);
-    } catch (err) {
-    }
-  }
-
-  const logout = (connection: Connection) => {
-    useAuthStore.setState({});
-    useHassStore.setState({});
+  const logout = () => {
+    useHassStore.destroy();
+    useAuthStore.destroy();
     localStorage.clear();
-    connection?.close();
+    auth.current = undefined;
     router.push('/auth');
+  }
+  
+
+  const _getAuth = async () => {
+    setLoading(true);
+    try {
+      const a = await getAuth({
+        saveTokens: saveAuthData,
+        loadTokens: loadAuthData,
+      });
+      if (a && a.accessToken) {
+        console.log('authed')
+        auth.current = a;
+      }
+    } catch (err) {
+      switch (err) {
+        case ERR_HASS_HOST_REQUIRED:
+          router.push('/auth');
+          break;
+        case ERR_INVALID_AUTH:
+          console.log('Invalid auth.');
+          break;
+        case ERR_CANNOT_CONNECT:
+          console.log('Can\'t connect.');
+          break;
+        case ERR_INVALID_HTTPS_TO_HTTP:
+          console.log('Invalid HTTPS to HTTP.');
+          break;
+        case ERR_CONNECTION_LOST:
+          console.log('Connection lost.');
+          break;
+        default:
+          break;
+      }
+    }
+    setLoading(false);
   }
 
   useEffect(() => {
-    if (!auth || !auth.accessToken) _getAuth();
-  }, [router, auth]);
+    _getAuth();
+  }, []);
 
-
-  return (
+  return loading ? null : (
     <AuthContext.Provider
       value={{
-        auth,
-        refresh: () => {},
+        auth: auth.current,
         connect,
         logout,
       }}

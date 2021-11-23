@@ -3,8 +3,7 @@ import React, { createContext } from 'react';
 import { HomeAssistantInstance } from '../types';
 
 interface AuthContextValues {
-  auth?: Auth;
-  refresh(): void;
+  auth: Auth | undefined;
   connect(
     instance: HomeAssistantInstance,
     preferExternal?: boolean,
@@ -13,7 +12,7 @@ interface AuthContextValues {
 }
 
 const AuthContext = createContext<AuthContextValues>({
-  refresh: () => {},
+  auth: undefined,
   connect: async () => undefined,
   logout: () => {},
 });
