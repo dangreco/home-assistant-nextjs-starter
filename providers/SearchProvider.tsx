@@ -10,7 +10,18 @@ const SearchProvider: React.FunctionComponent = ({
     entities,
   } = useHass();
 
-  const fuse = useRef<Fuse<any> | undefined>(new Fuse([], { includeScore: true, keys: ['entity_id', 'friendly_name'], threshold: 0.2 }));
+  const fuse = useRef<Fuse<any> | undefined>(
+    new Fuse(
+      [], 
+      { 
+        includeScore: true, 
+        keys: [
+          'entity_id', 
+          'friendly_name'
+        ]
+      }
+    )
+  );
 
   useEffect(() => {
     fuse.current.setCollection(
