@@ -13,6 +13,8 @@ const Home: React.FunctionComponent = () => {;
   const [query, setQuery] = useState<string | undefined>();
   const results = useQuery(query || '');
 
+  const t = results['foo'];
+
   return (
     <Page>
       <button

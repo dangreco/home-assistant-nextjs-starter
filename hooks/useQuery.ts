@@ -1,8 +1,9 @@
 import { useHass } from "@hooks";
 import { useContext, useMemo } from "react"
+import { HassEntitiesOpt } from "types";
 import SearchContext from "../contexts/SearchContext"
 
-const useQuery = (query: string) => {
+const useQuery = (query: string): HassEntitiesOpt => {
 
   const {
     entities,

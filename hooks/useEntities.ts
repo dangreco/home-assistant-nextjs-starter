@@ -1,7 +1,8 @@
 import { pick } from 'lodash';
+import { HassEntitiesOpt } from 'types';
 import useHass from './useHass';
 
-const useEntities = (entityIds?: string[]) => {
+const useEntities = (entityIds?: string[]): HassEntitiesOpt => {
   const {
     entities,
   } = useHass();

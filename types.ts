@@ -1,4 +1,4 @@
-import { Auth } from "home-assistant-js-websocket";
+import { Auth, HassEntity } from "home-assistant-js-websocket";
 
 export interface HomeAssistantInstance {
   locationName: string;
@@ -15,3 +15,7 @@ export enum ConnectionStatus {
   Reconnecting,
   Connected,
 }
+
+export type HassEntitiesOpt = {
+  [entityId: string]: HassEntity | undefined;
+};
